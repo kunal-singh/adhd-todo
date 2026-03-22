@@ -3,9 +3,6 @@ name: Deploy
 on:
   push:
     branches: [main]
-  pull_request:
-    branches: [main]
-    types: [opened, synchronize, reopened]
 
 jobs:
   deploy:
@@ -13,7 +10,6 @@ jobs:
     permissions:
       contents: read
       deployments: write
-      pull-requests: write
 
     steps:
       - uses: actions/checkout@v4
@@ -41,7 +37,4 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           projectName: adhd-todo
           directory: dist
-          # branch input only on push to main so CF treats it as production;
-          # omitting it on PRs lets CF create a named preview deployment
-          branch: ${{ github.event_name == 'push' && 'main' || '' }}
-          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+          branch: main
